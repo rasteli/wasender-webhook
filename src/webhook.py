@@ -29,11 +29,17 @@ def webhook():
 
   if event_type == "messages.upsert":
     message_data = payload["data"]["messages"]
-    timestamp = payload["timestamp"]
     key = message_data["key"]
     message = message_data["messageBody"]
-
     from_ = key["cleanedSenderPn"] if not key.get("fromMe") else 'me'
+    message_timestamp = message_data["messageTimestamp"]
+    timestamp = (
+        message_timestamp
+        if not message_timestamp.get("low") and not message_timestamp.get("high")
+        else message_timestamp.get("high") if message_timestamp.get("low") == 0
+        else message_timestamp.get("low")
+    )
+
     sent_date = datetime.fromtimestamp(timestamp).strftime('%d-%m-%Y %H:%M')
 
     print(f"New message from {from_}: {message} ({sent_date})")
