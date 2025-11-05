@@ -1,8 +1,9 @@
+import os
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-WEBHOOK_SECRET = "YOUR_WEBHOOK_SECRET"
+WEBHOOK_SECRET = os.getenv('WASENDER_WEBHOOK_SECRET')
 
 
 def verify_signature(req):
