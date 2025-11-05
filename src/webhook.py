@@ -23,17 +23,17 @@ def webhook():
     return jsonify({"error": "Invalid signature"}), 401
 
   payload = request.json
-  print("Received webhook event:", payload.get("event"))
+  event_type = payload["event"]
 
-  event_type = payload.get("event")
+  print("Received webhook event:", event_type)
 
   if event_type == "messages.upsert":
-    data = payload["data"]
+    message_data = payload["data"]["messages"]
     timestamp = payload["timestamp"]
-    key = data["key"]
-    message = data["message"]["conversation"]
+    key = message_data["key"]
+    message = message_data["messageBody"]
 
-    from_ = key.get('remoteJid') if not key["fromMe"] else 'me'
+    from_ = key["cleanedSenderPn"] if not key.get("fromMe") else 'me'
     sent_date = datetime.fromtimestamp(timestamp).strftime('%d-%m-%Y %H:%M')
 
     print(f"New message from {from_}: {message} ({sent_date})")

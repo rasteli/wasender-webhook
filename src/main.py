@@ -33,4 +33,4 @@ def wasender_send():
 
 
 if __name__ == '__main__':
-  twilio_send()
+  wasender_send()
